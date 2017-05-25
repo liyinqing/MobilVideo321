@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         fl_content = (FrameLayout) findViewById(R.id.fl_content);
         rg_main = (RadioGroup) findViewById(R.id.rg_main);
         initDate();
+
         rg_main.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 showFragment(baseFragment);
             }
         });
+        rg_main.check(R.id.rb_local_video);
 
     }
 
