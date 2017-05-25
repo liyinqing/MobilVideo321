@@ -117,22 +117,23 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
                 tv_name.setText(name);
                 seekbarProgress.setMax((int) duration);
                 tvDuration.setText(utils.stringForTime((int) duration));
+                setButton();
+
                 vv.start();
                 handler.sendEmptyMessage(CONTROL);
-
             }
         });
         vv.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                return false;
+                setNextPlayer();
+                return true;
             }
         });
         vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                position++;
-                setData();
+                setNextPlayer();
             }
         });
     }
@@ -146,10 +147,12 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
 
     private void setData() {
         if(mediaInfos != null && mediaInfos.size()>0){
-            MediaInfo mediaInfo = mediaInfos.get(position);
-            String data = mediaInfo.getData();
+            if(position < mediaInfos.size()) {
+                MediaInfo mediaInfo = mediaInfos.get(position);
+                String data = mediaInfo.getData();
 //        vv.setVideoPath(data);
-            vv.setVideoURI(Uri.parse(data));
+                vv.setVideoURI(Uri.parse(data));
+            }
         }else if(uri != null) {
             vv.setVideoURI(uri);
         }
@@ -246,23 +249,77 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
         } else if ( v == btnExit ) {
             // Handle clicks for btnExit
         } else if ( v == btnPre ) {
-            // Handle clicks for btnPre
+            btnPause.setBackgroundResource(R.drawable.btn_pause_selector);
+            setPrePlayer();
         } else if ( v == btnPause ) {
-            if(vv.isPlaying()){
-                vv.pause();
-                btnPause.setBackgroundResource(R.drawable.btn_start_selector);
-            }else{
-                vv.start();
-                btnPause.setBackgroundResource(R.drawable.btn_pause_selector);
-            }
+            setPlaying();
             // Handle clicks for btnPause
         } else if ( v == btnNext ) {
-            // Handle clicks for btnNext
+            btnPause.setBackgroundResource(R.drawable.btn_pause_selector);
+            setNextPlayer();
+
         } else if ( v == btnFullScreen ) {
             // Handle clicks for btnFullScreen
         }
     }
 
+    private void setPlaying() {
+        if(vv.isPlaying()){
+            vv.pause();
+            btnPause.setBackgroundResource(R.drawable.btn_start_selector);
+        }else{
+            vv.start();
+            btnPause.setBackgroundResource(R.drawable.btn_pause_selector);
+        }
+    }
+
+    private void setPrePlayer() {
+        if(mediaInfos != null && mediaInfos.size()>0){
+            position--;
+            if(position >=0){
+                vv.setVideoPath(mediaInfos.get(position).getData());
+            }
+        }
+        setButton();
+    }
+
+    private void setNextPlayer() {
+        if(mediaInfos != null && mediaInfos.size()>0){
+            position++;
+            if(position < mediaInfos.size()){
+                vv.setVideoPath(mediaInfos.get(position).getData());
+            }
+        }
+        setButton();
+    }
+
+    private void setButton() {
+        if(mediaInfos != null && mediaInfos.size()>0){
+            setEnabled(true);
+            if(position == 0){
+                btnPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                btnPre.setEnabled(false);
+            }
+            if(position == mediaInfos.size()-1){
+                btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+                btnNext.setEnabled(false);
+            }
+        }else if(uri != null){
+            setEnabled(false);
+        }
+    }
+
+    private void setEnabled(boolean b) {
+        if(b){
+            btnPre.setBackgroundResource(R.drawable.btn_pre_selector);
+            btnNext.setBackgroundResource(R.drawable.btn_next_selector);
+        }else {
+            btnPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+        }
+        btnNext.setEnabled(b);
+        btnPre.setEnabled(b);
+    }
 
 
 }
