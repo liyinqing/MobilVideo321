@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import atguigu.com.mobilvideo321.R;
+import atguigu.com.mobilvideo321.activity.SystemMediaPlayer;
 import atguigu.com.mobilvideo321.adapter.LocalMediaAdapter;
 import atguigu.com.mobilvideo321.domain.MediaInfo;
 import atguigu.com.mobilvideo321.fragment.BaseFragment;
@@ -58,9 +60,17 @@ public class LocalVideoPaper extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent();
-                String data = mediaInfos.get(position).getData();
-                intent.setDataAndType(Uri.parse(data),"video/*");
+                //吊起本机的
+//                Intent intent = new Intent();
+//                String data = mediaInfos.get(position).getData();
+//                intent.setDataAndType(Uri.parse(data),"video/*");
+//                startActivity(intent);
+                //吊起系统提供Api自定义的播放器
+                Intent intent = new Intent(context, SystemMediaPlayer.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("mediaInfos",mediaInfos);
+                intent.putExtras(bundle);
+                intent.putExtra("position",position);
                 startActivity(intent);
             }
         });
