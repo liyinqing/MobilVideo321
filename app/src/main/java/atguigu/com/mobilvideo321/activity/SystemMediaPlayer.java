@@ -19,7 +19,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import atguigu.com.mobilvideo321.R;
 import atguigu.com.mobilvideo321.Utils.Utils;
@@ -68,6 +70,8 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
             super.handleMessage(msg);
             switch (msg.what){
                 case CONTROL:
+                    //得到系统时间并且刷新
+                    tvTime.setText(getSystemTime());
                     int currentPosition = vv.getCurrentPosition();
                     tvProgress.setText(utils.stringForTime(currentPosition));
                     seekbarProgress.setProgress(currentPosition);
@@ -76,6 +80,13 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
             }
         }
     };
+
+    private String getSystemTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        String format1 = format.format(new Date());
+        return format1;
+    }
+
     private void listenter() {
         seekbarProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
