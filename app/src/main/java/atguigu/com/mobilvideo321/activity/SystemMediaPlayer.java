@@ -1,11 +1,16 @@
 package atguigu.com.mobilvideo321.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -173,6 +178,46 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
         btnPause.setOnClickListener( this );
         btnNext.setOnClickListener( this );
         btnFullScreen.setOnClickListener( this );
+
+        //注册广播接收电量变化
+        MyReceiver receiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver,filter);
+    }
+    class MyReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int level = intent.getIntExtra("level", 0);
+            Log.e("TAG","level========="+level);
+            setBatteryChanged(level);
+        }
+    }
+
+    private void setBatteryChanged(int level) {
+        if(level <= 0){
+            ivBattery.setImageResource(R.drawable.ic_battery_0);
+        }else if(level <= 10){
+            ivBattery.setImageResource(R.drawable.ic_battery_10);
+        }
+        else if(level <= 20){
+            ivBattery.setImageResource(R.drawable.ic_battery_20);
+        }
+        else if(level <= 40){
+            ivBattery.setImageResource(R.drawable.ic_battery_40);
+        }
+        else if(level <= 60){
+            ivBattery.setImageResource(R.drawable.ic_battery_60);
+        }
+        else if(level <= 80){
+            ivBattery.setImageResource(R.drawable.ic_battery_80);
+        }
+        else if(level <= 100){
+            ivBattery.setImageResource(R.drawable.ic_battery_100);
+        }else {
+            ivBattery.setImageResource(R.drawable.ic_battery_100);
+        }
     }
 
     /**
