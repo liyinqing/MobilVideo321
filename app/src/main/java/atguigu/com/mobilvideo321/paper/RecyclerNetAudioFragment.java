@@ -3,11 +3,17 @@ package atguigu.com.mobilvideo321.paper;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import atguigu.com.mobilvideo321.R;
 import atguigu.com.mobilvideo321.fragment.BaseFragment;
@@ -109,32 +115,52 @@ public class RecyclerNetAudioFragment extends BaseFragment {
         super.initData();
     }
     private void getMoreData() {
-//        String newUrl = LAST_URL + count + NEXT_URL;
-//        RequestParams request = new RequestParams(newUrl);
-//        x.http().get(request, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//                Log.e("TAG", "onSuccess--result---" + result);
-//                parseJson(result);
-//                refresh.finishRefreshLoadMore();
-//                count += 20;
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//                Toast.makeText(mContext, "onerror-----" + ex.getStackTrace(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//
-//            }
-//        });
+        String newUrl = LAST_URL + count + NEXT_URL;
+        RequestParams request = new RequestParams(newUrl);
+        x.http().get(request, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                parseJson(result);
+                refresh.finishRefreshLoadMore();
+                count += 20;
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(context, "onerror-----" + ex.getStackTrace(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+    private void parseJson(String result) {
+        NetAudioBean netAudioBean = (new Gson()).fromJson(result, NetAudioBean.class);
+        if(isRefresh) {
+            ArrayList<NetAudioBean.ListBean> list = (ArrayList<NetAudioBean.ListBean>) netAudioBean.getList();
+            if (list != null && list.size() > 0) {
+                adapter.setDatas(list);
+                textView.setVisibility(View.GONE);
+            } else {
+                textView.setVisibility(View.VISIBLE);
+            }
+        }else {
+            ArrayList<NetAudioBean.ListBean> list = (ArrayList<NetAudioBean.ListBean>) netAudioBean.getList();
+            if (list != null && list.size() > 0) {
+                adapter.setDatas(list);
+                textView.setVisibility(View.GONE);
+            } else {
+                textView.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 
 
