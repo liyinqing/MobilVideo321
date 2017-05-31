@@ -1,5 +1,6 @@
 package atguigu.com.mobilvideo321.paper;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import org.xutils.x;
 import java.util.ArrayList;
 
 import atguigu.com.mobilvideo321.R;
+import atguigu.com.mobilvideo321.activity.ShowImageAndGifActivity;
 import atguigu.com.mobilvideo321.adapter.MultipleAdapter;
 import atguigu.com.mobilvideo321.domain.NetAudioBean;
 import atguigu.com.mobilvideo321.fragment.BaseFragment;
@@ -28,13 +30,15 @@ public class RecyclerNetAudioFragment extends BaseFragment {
     private final static String NET_AUDIO_URL = "http://s.budejie.com/topic/list/jingxuan/1/budejie-android-6.2.8/0-20.json?market=baidu&udid=863425026599592&appname=baisibudejie&os=4.2.2&client=android&visiting=&mac=98%3A6c%3Af5%3A4b%3A72%3A6d&ver=6.2.8";
     private final static String LAST_URL = "http://s.budejie.com/topic/list/jingxuan/1/budejie-android-6.2.8/0-";
     private final static String NEXT_URL = ".json?market=baidu&udid=863425026599592&appname=baisibudejie&os=4.2.2&client=android&visiting=&mac=98%3A6c%3Af5%3A4b%3A72%3A6d&ver=6.2.8\\";
+
     private int count = 20;
     private boolean isRefresh = true;
+    private ArrayList<NetAudioBean.ListBean> datas = new ArrayList<>();
 
+    private MultipleAdapter adapter;
     private TextView textView;
     private RecyclerView recyclerView;
     private MaterialRefreshLayout refresh;
-    private MultipleAdapter adapter;
 
     @Override
     public View initView() {
@@ -63,54 +67,53 @@ public class RecyclerNetAudioFragment extends BaseFragment {
                 getMoreData();
             }
         });
-//        adapter = new MultipleAdapter(mContext, datas);
-//        recyclerView.setAdapter(adapter);
-//        adapter.setOnItemClickListener(new MultipleAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                NetAudioBean.ListBean listEntity = adapter.getItem(position);
-//                if (listEntity != null) {
-//                    Intent intent = new Intent(mContext, ShowImageAndGifActivity.class);
-//                    if (listEntity.getType().equals("gif")) {
-//                        String url = listEntity.getGif().getImages().get(0);
-//                        intent.putExtra("url", url);
-//                        mContext.startActivity(intent);
-//                    } else if (listEntity.getType().equals("image")) {
-//                        String url = listEntity.getImage().getBig().get(0);
-//                        intent.putExtra("url", url);
-//                        mContext.startActivity(intent);
-//                    }
-//
-//                }
-//            }
-//        });
+        adapter = new MultipleAdapter(context, datas);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new MultipleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                NetAudioBean.ListBean listEntity = adapter.getItem(position);
+                if (listEntity != null) {
+                    Intent intent = new Intent(context, ShowImageAndGifActivity.class);
+                    if (listEntity.getType().equals("gif")) {
+                        String url = listEntity.getGif().getImages().get(0);
+                        intent.putExtra("url", url);
+                        context.startActivity(intent);
+                    } else if (listEntity.getType().equals("image")) {
+                        String url = listEntity.getImage().getBig().get(0);
+                        intent.putExtra("url", url);
+                        context.startActivity(intent);
+                    }
+
+                }
+            }
+        });
       return view;
     }
     private void getDataFromNet() {
-//        RequestParams request = new RequestParams(NET_AUDIO_URL);
-//        x.http().get(request, new ItemTouchHelper.Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String result) {
-//                Log.e("TAG", "onSuccess--result---" + result);
-//                parseJson(result);
-//                refresh.finishRefresh();
-//            }
-//
-//            @Override
-//            public void onError(Throwable ex, boolean isOnCallback) {
-//                Toast.makeText(mContext, "onerror-----" + ex.getStackTrace(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException cex) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//
-//            }
-//        });
+        RequestParams request = new RequestParams(NET_AUDIO_URL);
+        x.http().get(request, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                parseJson(result);
+                refresh.finishRefresh();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
 
@@ -118,6 +121,7 @@ public class RecyclerNetAudioFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
+        getDataFromNet();
     }
     private void getMoreData() {
         String newUrl = LAST_URL + count + NEXT_URL;
