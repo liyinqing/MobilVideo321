@@ -3,19 +3,23 @@ package atguigu.com.mobilvideo321.paper;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
+import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.ArrayList;
+
 import atguigu.com.mobilvideo321.R;
+import atguigu.com.mobilvideo321.adapter.MultipleAdapter;
+import atguigu.com.mobilvideo321.domain.NetAudioBean;
 import atguigu.com.mobilvideo321.fragment.BaseFragment;
 
 
@@ -30,6 +34,7 @@ public class RecyclerNetAudioFragment extends BaseFragment {
     private TextView textView;
     private RecyclerView recyclerView;
     private MaterialRefreshLayout refresh;
+    private MultipleAdapter adapter;
 
     @Override
     public View initView() {
