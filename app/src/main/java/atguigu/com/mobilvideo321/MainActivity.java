@@ -15,6 +15,7 @@ import atguigu.com.mobilvideo321.paper.LocalAudioPaper;
 import atguigu.com.mobilvideo321.paper.LocalVideoPaper;
 import atguigu.com.mobilvideo321.paper.NetAudioPaper;
 import atguigu.com.mobilvideo321.paper.NetVideoPaper;
+import atguigu.com.mobilvideo321.paper.RecyclerNetAudioFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.rb_net_video:
                         position = 3;
+                        break;
+                    case R.id.net_recycler_audio:
+                        position= 4;
                         break;
                 }
                 BaseFragment baseFragment = fragments.get(position);
@@ -86,5 +90,6 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new LocalAudioPaper());
         fragments.add(new NetAudioPaper());
         fragments.add(new NetVideoPaper());
+        fragments.add(new RecyclerNetAudioFragment());
     }
 }

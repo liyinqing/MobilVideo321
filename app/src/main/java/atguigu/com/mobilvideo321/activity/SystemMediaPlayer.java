@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -51,6 +53,24 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
     private Uri uri;
     private Utils utils;
 
+    private GestureDetector detector = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
+        @Override
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
+            setPlaying();
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            return super.onDoubleTap(e);
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return super.onSingleTapConfirmed(e);
+
+        }
+    }) ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +227,12 @@ public class SystemMediaPlayer extends AppCompatActivity implements View.OnClick
             Log.e("TAG","level========="+level);
             setBatteryChanged(level);
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     private void setBatteryChanged(int level) {

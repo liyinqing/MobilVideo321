@@ -49,5 +49,11 @@
             android:text="网络视频"
             style="@style/Mystyle"
             />
+        <RadioButton
+            android:id="@+id/net_recycler_audio"
+            android:drawableTop="@drawable/rb_net_video_icon"
+            android:text="recycler"
+            style="@style/Mystyle"
+            />
     </RadioGroup>
 </LinearLayout>
